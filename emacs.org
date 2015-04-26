@@ -37,14 +37,18 @@ render a cleaner view.
   (setq org-startup-indented t)
 #+END_SRC
 * Helm mode
-Install helm if it's not already installed.
+Install helm.
 #+BEGIN_SRC emacs-lisp
-  (unless (package-installed-p 'helm)
-    (package-install 'helm))
+  (package-install 'helm)
 #+END_SRC
 
 Require and enable helm.
 #+BEGIN_SRC emacs-lisp
   (require 'helm-config)
   (helm-mode 1)
+#+END_SRC
+* Magit mode
+Install magit.
+#+BEGIN_SRC emacs-lisp
+  (package-install 'magit)
 #+END_SRC
