@@ -1,0 +1,32 @@
+* Global Settings
+** Appearance
+   Disable the menu-bar, tool-bar, and scroll-bar.
+   #+BEGIN_SRC emacs-lisp
+     (menu-bar-mode 0)
+     (tool-bar-mode 0)
+     (scroll-bar-mode 0)
+   #+END_SRC
+
+   Load a default theme.
+   #+BEGIN_SRC emacs-lisp
+     (load-theme 'wombat)
+   #+END_SRC
+** Initial buffers
+   Turn off the startup message with the Emacs logo.
+   #+BEGIN_SRC emacs-lisp
+     (setq inhibit-startup-message t)
+   #+END_SRC
+
+   Remove default text from the =*scratch*= buffer.
+   #+BEGIN_SRC emacs-lisp
+     (setq initial-scratch-message "")
+   #+END_SRC
+** Packages
+*** Repositories
+    Set up Melpa according to the [[http://melpa.org/#/getting-started][Getting Started]] instructions.
+    #+BEGIN_SRC emacs-lisp
+      (require 'package)
+      (add-to-list 'package-archives
+                   '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+      (package-initialize)
+    #+END_SRC
