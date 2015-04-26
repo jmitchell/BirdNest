@@ -52,3 +52,19 @@ Install magit.
 #+BEGIN_SRC emacs-lisp
   (package-install 'magit)
 #+END_SRC
+
+After my first magit commit (v1.4.0) I was shown a warning about
+potential dataloss.
+#+BEGIN_QUOTE
+Before running Git, Magit by default reverts all unmodified
+buffers which visit files tracked in the current repository.
+This can potentially lead to dataloss so you might want to
+disable this by adding the following line to your init file:
+
+  (setq magit-auto-revert-mode nil)
+#+END_QUOTE
+
+I'm disabling =magit-auto-revert-mode=.
+#+BEGIN_SRC emacs-lisp
+  (setq magit-auto-revert-mode nil)
+#+END_SRC
