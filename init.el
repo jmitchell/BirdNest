@@ -1,1 +1,1 @@
-(org-babel-load-file "~/.emacs.d/emacs.org")
+(org-babel-load-file (expand-file-name "emacs.org" user-emacs-directory))
