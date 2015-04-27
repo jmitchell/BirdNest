@@ -11,6 +11,11 @@ Load a default theme.
 #+BEGIN_SRC emacs-lisp
   (load-theme 'wombat)
 #+END_SRC
+
+Show matching parens.
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode 1)
+#+END_SRC
 ** Initial buffers
 Turn off the startup message with the Emacs logo.
 #+BEGIN_SRC emacs-lisp
@@ -21,9 +26,46 @@ Remove default text from the =*scratch*= buffer.
 #+BEGIN_SRC emacs-lisp
   (setq initial-scratch-message "")
 #+END_SRC
+** Native key mapping
+Emacs supports several modifier keys in addition to the
+frequently-used =C-= and =M-= (Control and Meta, resp). See the
+[[info:elisp#Keyboard%20Events][info:elisp#Keyboard Events]] page for more details.
+
+I use multiple computers with different operating systems and
+keyboards, but I don't want that to limit how I use Emacs. To some
+extent this will always be a losing battle, but it's worth striving
+for a consistent and extensible working environment.
+
+Xah Lee has documented [[http://ergoemacs.org/emacs/emacs_hyper_super_keys.html][How to Define Super & Hyper Keys]]. I've adapted
+those insights here. (Note: =pcase= is a nifty ML-style pattern
+matching macro. Here it lets me avoid repeating =system-type=.)
+#+BEGIN_SRC emacs-lisp
+  (pcase system-type
+    (`gnu/linux
+     ;; see http://xahlee.info/linux/linux_keyboard_tools.html
+     (debug "TODO: configure keybindings in the OS itself"))
+    (`darwin
+     (progn
+       (setq mac-command-modifier 'meta)
+       (setq mac-option-modifier 'super)
+       (setq mac-control-modifier 'control)
+       (setq ns-function-modifier 'hyper)))
+    (`windows-nt
+     (progn
+       (setq w32-pass-lwindow-to-system nil)
+       (setq w32-lwindow-modifier 'super) ; Left Windows key
+       
+       (setq w32-pass-rwindow-to-system nil)
+       (setq w32-rwindow-modifier 'super) ; Right Windows key
+       
+       (setq w32-pass-apps-to-system nil)
+       (setq w32-apps-modifier 'hyper) ; Menu/App key
+       (debug "TODO: verify windows keybindings"))
+    (_ (message "unrecognized system type"))))
+#+END_SRC
+*** TODO test modifier mappings in Linux, OS X, and Windows
 ** Packages
-*** Repositories
-Set up Melpa according to the [[http://melpa.org/#/getting-started][Getting Started]] instructions.
+Set up Melpa according to its [[http://melpa.org/#/getting-started][Getting Started]] instructions.
 #+BEGIN_SRC emacs-lisp
   (require 'package)
   (add-to-list 'package-archives
@@ -32,18 +74,27 @@ Set up Melpa according to the [[http://melpa.org/#/getting-started][Getting Star
 #+END_SRC
 * Org mode
 Upon entering org-mode, whether manually or by opening an org file,
-render a cleaner view.
+render a cleaner outline view with more indentation and fewer leading
+stars in headers.
 #+BEGIN_SRC emacs-lisp
   (setq org-startup-indented t)
 #+END_SRC
+
+Turn on automatic line breaking and spell checking.
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook 'auto-fill-mode)
+  (add-hook 'org-mode-hook 'flyspell-mode)
+#+END_SRC
+** TODO Consider using =variable-pitch-mode=
+A non-monospace font would be used instead.
+
+This would require exceptions for SRC blocks and [[http://stackoverflow.com/questions/3758139/variable-pitch-for-org-mode-fixed-pitch-for-tables][tables]]. I assume in
+non-graphical sessions it gracefully falls back to monospace, but
+that's also worth checking.
 * Helm mode
-Install helm.
+Install helm. Require and enable it.
 #+BEGIN_SRC emacs-lisp
   (package-install 'helm)
-#+END_SRC
-
-Require and enable helm.
-#+BEGIN_SRC emacs-lisp
   (require 'helm-config)
   (helm-mode 1)
 #+END_SRC
@@ -68,3 +119,38 @@ I'm disabling =magit-auto-revert-mode=.
 #+BEGIN_SRC emacs-lisp
   (setq magit-auto-revert-mode nil)
 #+END_SRC
+* Pain points
+** DONE Elisp isn't showing matching parens
+The opening paren corresponding to the current closing paren should be
+visually highlighted somehow.
+
+Fixed by turning on =show-paren-mode= globally.
+** TODO Flyspell isn't working out of the box
+At least on my OS X machine flyspell-mode isn't loading properly. May
+be an issue on Linux and Windows too.
+
+Install any necessary dependencies and wire up the configuration as
+needed. Consider automating the process in elisp so I don't have to do
+it again manually in the future.
+** TODO Helm's windows are too large
+When I have two windows and do anything to invoke Helm, the Helm
+buffer completely covers the non-active window. If there's only one
+window, Helm's window takes up half the frame.
+
+It really doesn't need to take up so much space when its fuzzy
+matching and navigation features are so good.
+** TODO Kill multiple buffers using Helm
+There's probably a reasonable way to do this without any configuration
+changes, but I haven't figured it out yet.
+
+When I invoke =kill-buffer= (=C-x k=) a Helm window pops up so I can
+choose which buffer to kill. I can mark multiple buffers using
+=C-SPC=, but it's not clear whether I can then kill all the marked
+buffers. I also tried running the =kill-some-buffers= command, but it
+doesn't trigger Helm.
+** TODO No key bound to =magit-status=
+Easy to fix, but I'd like to wait to see what other unbound commands I
+frequently use.
+** TODO Determine what commands I use most frequently that have no keybinding
+There may be a package out there to help with this. If not, it should
+be easy to implement.
