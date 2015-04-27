@@ -1,0 +1,64 @@
+* Bird Nest
+I've declared [[http://www.emacswiki.org/emacs/DotEmacsBankruptcy][Emacs init bankruptcy]] a few times, and I want that to
+stop. Bird Nest is my attempt to build a satisfying and maintainable
+Emacs configuration from scratch.
+** Objectives and Strategy
+- learn and use the abstractions provided by Emacs/elisp
+  - reading the Emacs Lisp Intro info doc helped immensely (and I
+    imagine the other info pages will too)
+- track questions, pain points, and nice-to-haves
+- work well on Linux, OS X, and Windows
+- avoid the "would I regret changing/removing this?" conundrum
+  - use version control
+  - record notes about decisions and concerns
+  - cite sources to retain context
+** Why not use configuration X?
+For the past 6 months or so I was happily using a personal fork of
+Steve Purcell's [[https://github.com/purcell/emacs.d][emacs.d repo]]. Sometimes I added new packages and
+configured them to my liking, and other times I made minor tweaks to
+Steve's elisp. This worked well enough. The elisp was divided into
+modular files and used clear conventions to wire everything
+together. I admit I didn't fully understand how every function worked,
+but it helped me see how a multi-faceted elisp project could be
+organized.
+
+Recently, whenever I saved a file Emacs was automatically doing
+something extra to be helpful. Generally this behavior was indeed
+helpful, but in this case it was a little /too/ helpful. I just wanted
+it to stop. As an elisp newbie I didn't know how to see what Emacs was
+actually doing.
+
+I narrowed the problem down by restarting Emacs with the =-q= flag to
+bypass my/Steve's configuration. The problematic behavior stopped, so
+I knew it had to be coming from the elaborate init config. Next I
+opened a terminal (outside of Emacs) and grepped =~/.emacs.d= for
+terms I thought might be relevant to the behavior. I opened a few
+promising matches in Emacs and iteratively commented out customization
+until the behavior finally stopped.
+
+It worked, but I was sure Emacs could have made this
+easier...somehow. I regularly use =C-h k= to look up what command is
+bound to the given keybinding and =C-h f= to see a function's
+documentation. Figuring out what elisp function Emacs invokes when I
+press =C-x C-s= was easy, but what then? It would be obvious if I knew
+how to do any of the following:
+
+- quickly find an elisp function's definition
+- step through elisp using a debugger
+- generate a trace log of elisp calls and search it
+- inspect a list of hooks triggered, directly or indirectly, by a
+  function
+
+...but I didn't know how to do any of that. I was stuck doing an
+iterative divide-and-conquer search without the help of Emacs or
+elisp. That bothered me. I decided at this point that Steve's
+configuration, while excellent, was serving as a crutch.
+
+Emacs promises to be hackable and extensible. That promise is the main
+reason I've used it as long as I have. But what good is a promise like
+that if I don't know how to leverage it when opportunity arises? I've
+seen other people hack solutions and benefitted from their work, but
+haven't taken the time really learn how to hack Emacs myself. The best
+way I know of to start is to work on my own nest.
+
+
