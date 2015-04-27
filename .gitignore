@@ -2,3 +2,5 @@
 *.elc
 **/*~
 /elpa/
+/README.html
+/url/
