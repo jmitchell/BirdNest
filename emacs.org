@@ -69,7 +69,7 @@ Set up Melpa according to its [[http://melpa.org/#/getting-started][Getting Star
 #+BEGIN_SRC emacs-lisp
   (require 'package)
   (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                           ("melpa-stable" . "http://stable.melpa.org/packages/")))
+                           ("melpa" . "http://melpa.org/packages/")))
   (package-initialize)
 #+END_SRC
 
