@@ -68,9 +68,15 @@ matching macro. Here it lets me avoid repeating =system-type=.)
 Set up Melpa according to its [[http://melpa.org/#/getting-started][Getting Started]] instructions.
 #+BEGIN_SRC emacs-lisp
   (require 'package)
-  (add-to-list 'package-archives
-               '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                           ("melpa-stable" . "http://stable.melpa.org/packages/")))
   (package-initialize)
+#+END_SRC
+
+Update the package archive if it's empty.
+#+BEGIN_SRC emacs-lisp
+  (unless package-archive-contents
+    (package-refresh-contents))
 #+END_SRC
 * Org mode
 Upon entering org-mode, whether manually or by opening an org file,
