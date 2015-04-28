@@ -125,6 +125,11 @@ I'm disabling =magit-auto-revert-mode=.
 #+BEGIN_SRC emacs-lisp
   (setq magit-auto-revert-mode nil)
 #+END_SRC
+* Rust mode
+Install Rust support.
+#+BEGIN_SRC emacs-lisp
+  (package-install 'rust-mode)
+#+END_SRC
 * Pain points
 ** DONE Elisp isn't showing matching parens
 The opening paren corresponding to the current closing paren should be
