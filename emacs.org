@@ -26,44 +26,6 @@ Remove default text from the =*scratch*= buffer.
 #+BEGIN_SRC emacs-lisp
   (setq initial-scratch-message "")
 #+END_SRC
-** Native key mapping
-Emacs supports several modifier keys in addition to the
-frequently-used =C-= and =M-= (Control and Meta, resp). See the
-[[info:elisp#Keyboard%20Events][info:elisp#Keyboard Events]] page for more details.
-
-I use multiple computers with different operating systems and
-keyboards, but I don't want that to limit how I use Emacs. To some
-extent this will always be a losing battle, but it's worth striving
-for a consistent and extensible working environment.
-
-Xah Lee has documented [[http://ergoemacs.org/emacs/emacs_hyper_super_keys.html][How to Define Super & Hyper Keys]]. I've adapted
-those insights here. (Note: =pcase= is a nifty ML-style pattern
-matching macro. Here it lets me avoid repeating =system-type=.)
-#+BEGIN_SRC emacs-lisp
-  (pcase system-type
-    (`gnu/linux
-     ;; see http://xahlee.info/linux/linux_keyboard_tools.html
-     (debug "TODO: configure keybindings in the OS itself"))
-    (`darwin
-     (progn
-       (setq mac-command-modifier 'meta)
-       (setq mac-option-modifier 'super)
-       (setq mac-control-modifier 'control)
-       (setq ns-function-modifier 'hyper)))
-    (`windows-nt
-     (progn
-       (setq w32-pass-lwindow-to-system nil)
-       (setq w32-lwindow-modifier 'super) ; Left Windows key
-       
-       (setq w32-pass-rwindow-to-system nil)
-       (setq w32-rwindow-modifier 'super) ; Right Windows key
-       
-       (setq w32-pass-apps-to-system nil)
-       (setq w32-apps-modifier 'hyper) ; Menu/App key
-       (debug "TODO: verify windows keybindings"))
-    (_ (message "unrecognized system type"))))
-#+END_SRC
-*** TODO test modifier mappings in Linux, OS X, and Windows
 ** Packages
 Set up Melpa according to its [[http://melpa.org/#/getting-started][Getting Started]] instructions.
 #+BEGIN_SRC emacs-lisp
