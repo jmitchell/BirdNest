@@ -92,6 +92,109 @@ Install Rust support.
 #+BEGIN_SRC emacs-lisp
   (package-install 'rust-mode)
 #+END_SRC
+* TODO mu4e mode
+- [X] Download, make, and install latest version of [[https://code.google.com/p/mu0/downloads/list][mu]]
+- [X] Install and configure offlineimap
+- [ ] Manually sync messages and confirm it works
+- [ ] Ensure offlineimap routinely downloads new messages
+- [ ] Index Maildirs using mu
+- [ ] Configure mu4e
+  #+BEGIN_SRC emacs-lisp
+    (require 'mu4e)
+
+    (setq mu4e-sent-folder "/FastMail/INBOX.Sent Items"
+          mu4e-drafts-folder "/FastMail/INBOX.Drafts"
+          mu4e-trash-folder "/FastMail/INBOX.Trash"
+          mu4e-refile-folder "/FastMail/INBOX.Archive"
+          user-mail-address "jake@requisitebits.com"
+          smtpmail-default-smtp-server "mail.messagingengine.com"
+          smtpmail-local-domain "requisitebits.com"
+          smtpmail-smtp-server "mail.messagingengine.com"
+          smtpmail-stream-type 'starttls
+          smtpmail-smtp-service 465)
+
+    (defvar my-mu4e-account-alist
+      '(("FastMail"
+         (mu4e-sent-folder "/FastMail/INBOX.Sent Items")
+         (mu4e-drafts-folder "/FastMail/INBOX.Drafts")
+         (mu4e-trash-folder "/FastMail/INBOX.Trash")
+         (mu4e-refile-folder "/FastMail/INBOX.Archive")
+         (user-mail-address "jake@requisitebits.com")
+         (smtpmail-default-smtp-server "mail.messagingengine.com")
+         (smtpmail-local-domain "requisitebits.com")
+         (smtpmail-smtp-server "mail.messagingengine.com")
+         (smtpmail-stream-type 'starttls)
+         (smtpmail-smtp-service 465))
+        ("GMail"
+         (mu4e-sent-folder "/GMail/[Gmail].Sent Mail")
+         (mu4e-drafts-folder "/GMail/[Gmail].Drafts")
+         (mu4e-trash-folder "/GMail/[Gmail].Trash")
+         (mu4e-refile-folder "/GMail/Refile")
+         (user-mail-address "jacob.d.mitchell@gmail.com")
+         (smtpmail-default-smtp-server "smtp.gmail.com")
+    ;     (smtpmail-local-domain "gmail.com")
+         (smtpmail-smtp-server "smpt.gmail.com")
+         (smtpmail-stream-type 'starttls)
+         (smtpmail-smtp-service 465))))
+
+    (defun my-mu4e-set-account ()
+      "Set the account for composing a message."
+      (let* ((account
+              (if mu4e-compose-parent-message
+                  (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
+                    (string-match "/\\(.*?\\)/" maildir)
+                    (match-string 1 maildir))
+                (completing-read (format "Compose with account: (%s) "
+                                         (mapconcat #'(lambda (var) (car var))
+                                                    my-mu4e-account-alist "/"))
+                                 (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
+                                 nil t nil nil (caar my-mu4e-account-alist))))
+             (account-vars (cdr (assoc account my-mu4e-account-alist))))
+        (if account-vars
+            (mapc #'(lambda (var)
+                      (set (car var) (cadr var)))
+                  account-vars)
+          (error "No email account found"))))
+
+    (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
+
+    (setq
+     mu4e-get-mail-command "offlineimap"
+     mu4e-update-interval 300)
+
+    (setq mu4e-attachment-dir "~/Downloads/attachments")
+
+    ;;; TODO: integrate with GPG (see info:mu4e section 5.6)
+
+    ;;; TODO: support smtp queueing (see info:mu4e section 6.6)
+    ;;; NB:
+    ;;;   messages won't be sent until queued-mode is turned off
+    ;;;   again. may be worth writing a script to periodically check for
+    ;;;   internet connectivity when queued-mode is on and toggle as
+    ;;;   appropriate.
+
+    (setq message-kill-buffer-on-exit t)
+
+    ;;; TODO: figure out how to query a maildir associated with a
+    ;;; particular account's maildir, and also how to query across all
+    ;;; maildirs.
+
+    (setq mail-user-agent 'mu4e-user-agent)
+    (require 'smtpmail)
+    (setq send-mail-function         'smtpmail-send-it
+          message-send-mail-function 'message-smtpmail-send-it
+          smtpmail-smtp-server       "mail.messagingengine.com")
+
+    ;;; TODO: use org-mu4e to get links to support links to specific
+    ;;; messages or queries (see info section A.2)
+
+    ;;; TODO: try rich-text with org-mode (see info sec A.3)
+
+    ;;; TODO: try mail notifications with Sauron (see info sec A.5)
+
+    ;;; TODO: test replying to a thread. if quoted sections of earlier
+    ;;; messages look odd, try using mu-cite (see A.7)
+  #+END_SRC
 * Pain points
 ** DONE Elisp isn't showing matching parens
 The opening paren corresponding to the current closing paren should be
