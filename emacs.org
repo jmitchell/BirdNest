@@ -1,4 +1,8 @@
 * Global Settings
+** Key Bindings
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-c /") 'flymake-compile)
+#+END_SRC
 ** Appearance
 Disable the menu-bar, tool-bar, and scroll-bar.
 #+BEGIN_SRC emacs-lisp
