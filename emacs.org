@@ -86,6 +86,7 @@ disable this by adding the following line to your init file:
 I'm disabling =magit-auto-revert-mode=.
 #+BEGIN_SRC emacs-lisp
   (setq magit-auto-revert-mode nil)
+  (setq magit-last-seen-setup-instructions "1.4.0")
 #+END_SRC
 * Rust mode
 Install Rust support.
