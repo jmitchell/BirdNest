@@ -93,6 +93,12 @@ Install Rust support.
 #+BEGIN_SRC emacs-lisp
   (package-install 'rust-mode)
 #+END_SRC
+* SLIME
+#+BEGIN_SRC emacs-lisp
+  (package-install 'slime)
+  (setq inferior-lisp-program "/usr/local/bin/ccl")
+  (setq slime-contribs '(slime-fancy))
+#+END_SRC
 * Pain points
 ** DONE Elisp isn't showing matching parens
 The opening paren corresponding to the current closing paren should be
