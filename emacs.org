@@ -59,13 +59,6 @@ A non-monospace font would be used instead.
 This would require exceptions for SRC blocks and [[http://stackoverflow.com/questions/3758139/variable-pitch-for-org-mode-fixed-pitch-for-tables][tables]]. I assume in
 non-graphical sessions it gracefully falls back to monospace, but
 that's also worth checking.
-* Helm mode
-Install helm. Require and enable it.
-#+BEGIN_SRC emacs-lisp
-  (package-install 'helm)
-  (require 'helm-config)
-  (helm-mode 1)
-#+END_SRC
 * Magit mode
 Install magit.
 #+BEGIN_SRC emacs-lisp
