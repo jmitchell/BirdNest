@@ -91,6 +91,7 @@ Install Rust support.
   (package-install 'slime)
   (setq inferior-lisp-program "/usr/local/bin/ccl")
   (setq slime-contribs '(slime-fancy))
+#+END_SRC
 * Aurel
 #+BEGIN_SRC emacs-lisp
   (autoload 'aurel-package-info "aurel" nil t)
@@ -99,6 +100,10 @@ Install Rust support.
   (autoload 'aurel-installed-packages "aurel" nil t)
 
   (setq aurel-download-directory "~/abs")
+#+END_SRC
+* Docker
+#+BEGIN_SRC emacs-lisp
+  (package-install 'dockerfile-mode)
 #+END_SRC
 * Pain points
 ** DONE Elisp isn't showing matching parens
