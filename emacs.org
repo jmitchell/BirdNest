@@ -16,6 +16,10 @@ Show matching parens.
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode 1)
 #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+#+END_SRC
 ** Initial buffers
 Turn off the startup message with the Emacs logo.
 #+BEGIN_SRC emacs-lisp
