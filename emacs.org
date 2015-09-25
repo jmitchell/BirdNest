@@ -44,6 +44,12 @@ Update the package archive if it's empty.
   (unless package-archive-contents
     (package-refresh-contents))
 #+END_SRC
+** Navigation
+Enable ido for fuzzy buffer/file completion.
+
+#+BEGIN_SRC emacs-lisp
+  (ido-mode 1)
+#+END_SRC
 * Org mode
 Upon entering org-mode, whether manually or by opening an org file,
 render a cleaner outline view with more indentation and fewer leading
