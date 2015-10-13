@@ -7,11 +7,6 @@ Disable the menu-bar, tool-bar, and scroll-bar.
   (scroll-bar-mode 0)
 #+END_SRC
 
-Load a default theme.
-#+BEGIN_SRC emacs-lisp
-  (load-theme 'wombat)
-#+END_SRC
-
 Show matching parens.
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode 1)
@@ -49,6 +44,62 @@ Enable ido for fuzzy buffer/file completion.
 
 #+BEGIN_SRC emacs-lisp
   (ido-mode 1)
+  (setq ido-enable-flex-matching t)
+#+END_SRC
+
+Turn on winner-mode, so window layout changes can be undone (=C-c
+<left>=) and redone (=C-c <right>=).
+
+#+BEGIN_SRC emacs-lisp
+  (winner-mode 1)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-o") 'other-window)
+#+END_SRC
+** Writing
+Don't require two spaces after the end of a sentence.
+
+#+BEGIN_SRC emacs-lisp
+  (setq sentence-end-double-space nil)
+#+END_SRC
+** Whitespace management
+#+BEGIN_SRC emacs-lisp
+(set-fill-column 80)
+
+(global-whitespace-cleanup-mode)
+(global-whitespace-mode)
+
+(require 'hexrgb)
+
+(defvar subtilize-bg-color (face-attribute 'default :background)
+  "Background color used by SUBTILIZE-FACE to compute and apply a
+    subtle face.")
+
+(defun subtilize-face (face &optional factor)
+  (let* ((factor (or factor 0.001))
+         ;; TODO: improve subtle-fg across more themes
+         (subtle-fg (hexrgb-increment-value
+                     subtilize-bg-color factor 2)))
+    (set-face-attribute face nil
+                        :inherit 'default
+                        :background subtilize-bg-color
+                        :foreground subtle-fg)))
+
+(defun subtilize-bg-changed (&rest r)
+  (setq subtilize-bg-color (face-attribute 'default :background))
+  (message (concat "Using background color: " subtilize-bg-color))
+  (run-hooks 'subtilize-bg-changed-hook))
+
+(advice-add #'set-background-color :after #'subtilize-bg-changed)
+(advice-add #'load-theme :after #'subtilize-bg-changed)
+
+(defun fix-whitespace-faces ()
+  (mapcar #'subtilize-face (list whitespace-space
+                                           whitespace-tab
+                                           whitespace-newline)))
+
+(add-hook 'subtilize-bg-changed-hook #'fix-whitespace-faces)
 #+END_SRC
 * Org mode
 Upon entering org-mode, whether manually or by opening an org file,
@@ -58,10 +109,32 @@ stars in headers.
   (setq org-startup-indented t)
 #+END_SRC
 
+When WHITESPACE-MODE is enabled, the 'ORG-INDENT face is a bit too
+intense.
+#+BEGIN_SRC emacs-lisp
+(require 'org-indent)
+(add-hook 'subtilize-bg-changed-hook
+          (lambda () (subtilize-face 'org-indent 0.0001)))
+#+END_SRC
+
+
+Load a default theme. Moved here from the [[*Appearance][Appearance section]] because
+=load-theme= has been advised to run =subtilize-bg-changed=.
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'wombat)
+#+END_SRC
+
+
 Turn on automatic line breaking and spell checking.
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'auto-fill-mode)
   (add-hook 'org-mode-hook 'flyspell-mode)
+#+END_SRC
+
+Preserve indentation, so TAB characters in org-babel source blocks are
+preserved (crucial for Makefiles).
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-preserve-indentation t)
 #+END_SRC
 ** TODO Consider using =variable-pitch-mode=
 A non-monospace font would be used instead.
