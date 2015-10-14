@@ -1,5 +1,24 @@
 * Global Settings
+** Packages
+Set up Melpa according to its [[http://melpa.org/#/getting-started][Getting Started]] instructions.
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                           ("melpa" . "http://melpa.org/packages/")))
+  (package-initialize)
+#+END_SRC
+
+Update the package archive if it's empty.
+#+BEGIN_SRC emacs-lisp
+  (unless package-archive-contents
+    (package-refresh-contents))
+#+END_SRC
 ** Appearance
+Load a default theme.
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'wombat)
+#+END_SRC
+
 Disable the menu-bar, tool-bar, and scroll-bar.
 #+BEGIN_SRC emacs-lisp
   (menu-bar-mode 0)
@@ -24,20 +43,6 @@ Turn off the startup message with the Emacs logo.
 Remove default text from the =*scratch*= buffer.
 #+BEGIN_SRC emacs-lisp
   (setq initial-scratch-message "")
-#+END_SRC
-** Packages
-Set up Melpa according to its [[http://melpa.org/#/getting-started][Getting Started]] instructions.
-#+BEGIN_SRC emacs-lisp
-  (require 'package)
-  (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                           ("melpa" . "http://melpa.org/packages/")))
-  (package-initialize)
-#+END_SRC
-
-Update the package archive if it's empty.
-#+BEGIN_SRC emacs-lisp
-  (unless package-archive-contents
-    (package-refresh-contents))
 #+END_SRC
 ** Navigation
 Enable ido for fuzzy buffer/file completion.
@@ -94,7 +99,6 @@ Don't require two spaces after the end of a sentence.
 
 (defun subtilize-bg-changed (&rest r)
   (setq subtilize-bg-color (face-attribute 'default :background))
-  (message (concat "Using background color: " subtilize-bg-color))
   (run-hooks 'subtilize-bg-changed-hook))
 
 (advice-add #'set-background-color :after #'subtilize-bg-changed)
@@ -102,8 +106,9 @@ Don't require two spaces after the end of a sentence.
 
 (defun fix-whitespace-faces ()
   (mapcar #'subtilize-face (list whitespace-space
-                                           whitespace-tab
-                                           whitespace-newline)))
+                                 whitespace-tab
+                                 whitespace-newline)))
+(fix-whitespace-faces)
 
 (add-hook 'subtilize-bg-changed-hook #'fix-whitespace-faces)
 #+END_SRC
@@ -119,17 +124,12 @@ When WHITESPACE-MODE is enabled, the 'ORG-INDENT face is a bit too
 intense.
 #+BEGIN_SRC emacs-lisp
 (require 'org-indent)
-(add-hook 'subtilize-bg-changed-hook
-          (lambda () (subtilize-face 'org-indent 0.0001)))
+
+(defun fix-org-face ()
+  (subtilize-face 'org-indent 0.0001))
+(fix-org-face)
+(add-hook 'subtilize-bg-changed-hook #'fix-org-face)
 #+END_SRC
-
-
-Load a default theme. Moved here from the [[*Appearance][Appearance section]] because
-=load-theme= has been advised to run =subtilize-bg-changed=.
-#+BEGIN_SRC emacs-lisp
-  (load-theme 'wombat)
-#+END_SRC
-
 
 Turn on automatic line breaking and spell checking.
 #+BEGIN_SRC emacs-lisp
