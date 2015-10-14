@@ -57,6 +57,12 @@ Turn on winner-mode, so window layout changes can be undone (=C-c
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-o") 'other-window)
 #+END_SRC
+
+Bookmarks.
+#+BEGIN_SRC emacs-lisp
+(setq bookmark-save-flag 1
+      bookmark-default-file "~/.emacs.d/bookmarks")
+#+END_SRC
 ** Writing
 Don't require two spaces after the end of a sentence.
 
