@@ -78,6 +78,9 @@ Don't require two spaces after the end of a sentence.
 #+BEGIN_SRC emacs-lisp
 (set-fill-column 80)
 
+(package-install 'whitespace-cleanup-mode)
+(package-install 'hexrgb)
+
 (global-whitespace-cleanup-mode)
 (global-whitespace-mode)
 
