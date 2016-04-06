@@ -197,6 +197,20 @@ Install Rust support.
 #+BEGIN_SRC emacs-lisp
   (package-install 'dockerfile-mode)
 #+END_SRC
+* Coq
+[[http://proofgeneral.inf.ed.ac.uk/][Proof General]] is an Emacs environment that makes using [[https://coq.inria.fr/][Coq]] and other
+proof assistants more interactive. Both are installed via my system's
+package manager.
+
+[[https://github.com/cpitclaudel/company-coq][company-coq]] adds all sorts of completion and discovery features,
+making the process even more interactive. To get a sense for its
+features, run =M-x company-coq-tutorial=.
+
+#+BEGIN_SRC emacs-lisp
+(package-install 'company)
+(package-install 'company-coq)
+(add-hook 'coq-mode-hook #'company-coq-mode)
+#+END_SRC
 * Pain points
 ** DONE Elisp isn't showing matching parens
 The opening paren corresponding to the current closing paren should be
